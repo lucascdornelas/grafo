@@ -136,10 +136,42 @@ void busca_profundidade(Grafo *gr, int ini, int *visitado, int cont){
     }
 }
 
+void busca_largura_grafo(Grafo *gr, int ini, int *visitado){
+    int i, vert, NV, cont = 1, *fila, IF = 0, FF = 0;
+    // marca os vértices como não visitados
+    for(i = 0; i < gr->nro_vertices; i++)
+        visitado[i] = 0;
+    
+    // cria fila.
+    // visita e insere "ini" na fila
+    NV = gr->nro_vertices;
+    fila = (int*) malloc(NV * sizeof(int));
+    FF++;
+    fila[FF] = ini;
+    visitado[ini] = cont;
+
+    // pega primeiro da fila
+    while(IF != FF){
+        IF = (IF + 1) % NV;
+        vert = fila[IF];
+        cont++;
+        
+        // visita os visinhos ainda não visitados e coloca na fil
+        for(i = 0; i < gr->grau[vert]; i++){
+            if(!visitado[gr->arestas[vert][i]]){
+                FF = (FF + 1) % NV;
+                fila[FF] = gr->arestas[vert][i];
+                visitado[gr->arestas[vert][i]] = cont;
+            }
+        }
+    }
+    free(fila);
+}
+
 
 int main(int argc, char const *argv[]){
     Grafo *gr;
-    gr = cria_grafo(7, 2, 0);
+    gr = cria_grafo(9, 2, 0);
 
     insere_aresta(gr, 0, 1, 0, 0);
     insere_aresta(gr, 0, 5, 0, 0);
@@ -148,12 +180,20 @@ int main(int argc, char const *argv[]){
     insere_aresta(gr, 3, 4, 0, 0);
     insere_aresta(gr, 5, 6, 0, 0);
 
-    int visitados[7];
+    insere_aresta(gr, 7, 8, 0, 0);
 
-    busca_profundidade_grafo(gr, 0, visitados);
+    int visitados_profundidade[9];
+    int visitados_largura[9];
 
-    for(int i = 0; i < 7; i++){
-        printf("%d ", visitados[i]);
+    busca_largura_grafo(gr, 0, visitados_largura);
+    busca_profundidade_grafo(gr, 0, visitados_profundidade);
+
+    for(int i = 0; i < 9; i++){
+        printf("%d ", visitados_profundidade[i]);
+    }
+    printf("\n");
+    for(int i = 0; i < 9; i++){
+        printf("%d ", visitados_largura[i]);
     }
 
     libera_grafo(gr);

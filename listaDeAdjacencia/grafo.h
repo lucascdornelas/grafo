@@ -10,5 +10,4 @@ int remove_aresta(Grafo *gr, int orig, int dest, int eh_digrafo);
 // Busca em Grafos
 void busca_profundidade_grafo(Grafo *gr, int ini, int *visitado);       //função interface com o usuário
 void busca_profundidade(Grafo *gr, int ini, int *visitado, int cont);   //função que vai calcular e a busca
-
-
+void busca_largura_grafo(Grafo *gr, int ini, int *visitado);
