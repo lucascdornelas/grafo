@@ -108,3 +108,55 @@ int remove_aresta(Grafo *gr, int orig, int dest, int eh_digrafo){
 
     return 1;
 }
+
+// função que faz a interface com o usuário
+void busca_profundidade_grafo(Grafo *gr, int ini, int *visitado){
+    int i, cont = 1;
+    for(i = 0; i< gr->nro_vertices; i++){
+        visitado[i] = 0;
+    }
+
+    busca_profundidade(gr, ini, visitado, cont);
+}
+
+// função que faz o cálculo
+void busca_profundidade(Grafo *gr, int ini, int *visitado, int cont){
+    int i;
+    visitado[ini] = cont;
+
+    for(i = 0; i < gr->grau[ini]; i++){
+        if(!visitado[gr->arestas[ini][i]]){
+            // chamada recursiva, assim cria a pilha de execução quando finalizar a busca em profundidade completa
+            // ele vai chamar o ultimo no vétice empilhado e verificar se seu próximo vertice ja foi visitado.
+            // caso ainda não for visitado: passa ele para execução, até todos seus filhos forem visitados...
+            // caso já tiver sido visitado: então passa para o vertice pai e assim por diante...
+
+            busca_profundidade(gr, gr->arestas[ini][i], visitado, cont+1);
+        }
+    }
+}
+
+
+int main(int argc, char const *argv[]){
+    Grafo *gr;
+    gr = cria_grafo(7, 2, 0);
+
+    insere_aresta(gr, 0, 1, 0, 0);
+    insere_aresta(gr, 0, 5, 0, 0);
+    insere_aresta(gr, 1, 2, 0, 0);
+    insere_aresta(gr, 1, 3, 0, 0);
+    insere_aresta(gr, 3, 4, 0, 0);
+    insere_aresta(gr, 5, 6, 0, 0);
+
+    int visitados[7];
+
+    busca_profundidade_grafo(gr, 0, visitados);
+
+    for(int i = 0; i < 7; i++){
+        printf("%d ", visitados[i]);
+    }
+
+    libera_grafo(gr);
+
+    return 0;
+}
